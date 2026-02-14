@@ -3,6 +3,14 @@
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h2>Available Rooms</h2>
+    <form method="get" style="display: flex; gap: 0.5rem;">
+        <input type="text" name="q" placeholder="Search rooms..." value="{{ request.GET.q|default:'' }}"
+            class="form-control" style="width: 200px;">
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if request.GET.q %}
+        <a href="{% url 'room_list' %}" class="btn btn-outline">Clear</a>
+        {% endif %}
+    </form>
 </div>
 
 <div class="grid">
@@ -15,7 +23,20 @@
             <div><span class="text-light">Floor:</span> {{ room.floor }}</div>
             <div><span class="text-light">Type:</span> {{ room.room_type }}</div>
             <div><span class="text-light">Capacity:</span> {{ room.capacity }}</div>
-            <div><span class="text-light">Occupancy:</span> {{ room.current_occupancy }}</div>
+
+            <div style="margin-top: 0.5rem;">
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.25rem;">
+                    <span class="text-light">Occupancy</span>
+                    <span>{{ room.current_occupancy }} / {{ room.capacity }}</span>
+                </div>
+                <!-- Simple progress bar using inline styles -->
+                <div style="background-color: #e5e7eb; border-radius: 9999px; height: 8px; overflow: hidden;">
+                    <div
+                        style="background-color: var(--primary); height: 100%; width: {% widthratio room.current_occupancy room.capacity 100 %}%;">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center;">

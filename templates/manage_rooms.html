@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="card-header" style="margin-bottom: 2rem;">
+<div class="card-header"
+    style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
     <h2>Manage Rooms</h2>
-    <a href="{% url 'add_room' %}" class="btn btn-primary" style="float: right;">Add Room</a>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        <form method="get" style="display: flex; gap: 0.5rem;">
+            <input type="text" name="q" placeholder="Search rooms..." value="{{ request.GET.q|default:'' }}"
+                class="form-control" style="width: 200px;">
+            <button type="submit" class="btn btn-primary">Search</button>
+            {% if request.GET.q %}
+            <a href="{% url 'manage_rooms' %}" class="btn btn-outline">Clear</a>
+            {% endif %}
+        </form>
+        <a href="{% url 'add_room' %}" class="btn btn-primary">Add Room</a>
+    </div>
 </div>
 
 <div class="card">

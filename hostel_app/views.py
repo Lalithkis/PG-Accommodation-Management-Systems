@@ -43,6 +43,11 @@ def student_dashboard(request):
 @login_required
 def room_list(request):
     rooms = Room.objects.all()
+    
+    query = request.GET.get('q')
+    if query:
+        rooms = rooms.filter(block_name__icontains=query) | rooms.filter(room_number__icontains=query)
+
     # Check current application status
     has_pending = RoomAllocation.objects.filter(student=request.user, status='Pending').exists()
     has_room = RoomAllocation.objects.filter(student=request.user, status='Approved').exists()
@@ -127,6 +132,10 @@ def admin_dashboard(request):
 @user_passes_test(is_admin)
 def manage_rooms(request):
     rooms = Room.objects.all().order_by('block_name', 'room_number')
+    query = request.GET.get('q')
+    if query:
+        rooms = rooms.filter(block_name__icontains=query) | rooms.filter(room_number__icontains=query)
+        
     return render(request, 'manage_rooms.html', {'rooms': rooms})
 
 @user_passes_test(is_admin)
@@ -164,11 +173,27 @@ def delete_room(request, room_id):
 @user_passes_test(is_admin)
 def manage_students(request):
     allocations = RoomAllocation.objects.filter(status='Approved').select_related('student__studentprofile', 'room')
+    query = request.GET.get('q')
+    if query:
+        from django.db.models import Q
+        allocations = allocations.filter(
+            Q(student__username__icontains=query) | 
+            Q(student__studentprofile__full_name__icontains=query) |
+            Q(student__studentprofile__department__icontains=query)
+        )
     return render(request, 'manage_students.html', {'allocations': allocations})
 
 @user_passes_test(is_admin)
 def manage_allocations(request):
     allocations = RoomAllocation.objects.all().order_by('-allocated_date') # Or filter pending
+    query = request.GET.get('q')
+    if query:
+        from django.db.models import Q
+        allocations = allocations.filter(
+            Q(student__username__icontains=query) |
+            Q(room__room_number__icontains=query) |
+            Q(room__block_name__icontains=query)
+        )
     return render(request, 'manage_allocations.html', {'allocations': allocations})
 
 @user_passes_test(is_admin)
@@ -199,6 +224,14 @@ def approve_reject_allocation(request, allocation_id, action):
 @user_passes_test(is_admin)
 def manage_complaints(request):
     complaints = Complaint.objects.all().order_by('-created_at')
+    query = request.GET.get('q')
+    if query:
+        from django.db.models import Q
+        complaints = complaints.filter(
+            Q(student__username__icontains=query) |
+            Q(subject__icontains=query) |
+            Q(description__icontains=query)
+        )
     return render(request, 'manage_complaints.html', {'complaints': complaints})
 
 @user_passes_test(is_admin)
