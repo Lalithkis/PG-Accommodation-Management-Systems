@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Available Rooms</h2>
+</div>
+
+<div class="grid">
+    {% for room in rooms %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">{{ room.block_name }} - {{ room.room_number }}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <div><span class="text-light">Floor:</span> {{ room.floor }}</div>
+            <div><span class="text-light">Type:</span> {{ room.room_type }}</div>
+            <div><span class="text-light">Capacity:</span> {{ room.capacity }}</div>
+            <div><span class="text-light">Occupancy:</span> {{ room.current_occupancy }}</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            {% if room.status == 'Available' %}
+            <span class="badge badge-success">Available</span>
+            {% if not has_pending and not has_room_allocated %}
+            <a href="{% url 'apply_room' room.id %}" class="btn btn-primary"
+                onclick="return confirm('Are you sure you want to apply for this room?');">Apply</a>
+            {% else %}
+            <button class="btn btn-outline" disabled
+                style="opacity: 0.5; cursor: not-allowed;">Applied/Allocated</button>
+            {% endif %}
+            {% elif room.status == 'Full' %}
+            <span class="badge badge-danger">Full</span>
+            <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">Full</button>
+            {% else %}
+            <span class="badge badge-warning">Maintenance</span>
+            <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">Unavailable</button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="card">
+        <p>No rooms found.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

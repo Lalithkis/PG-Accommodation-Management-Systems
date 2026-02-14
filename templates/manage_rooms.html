@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>Manage Rooms</h2>
+    <a href="{% url 'add_room' %}" class="btn btn-primary" style="float: right;">Add Room</a>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Room No.</th>
+                    <th>Block</th>
+                    <th>Floor</th>
+                    <th>Capacity</th>
+                    <th>Occupancy</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ room.room_number }}</td>
+                    <td>{{ room.block_name }}</td>
+                    <td>{{ room.floor }}</td>
+                    <td>{{ room.capacity }}</td>
+                    <td>{{ room.current_occupancy }}</td>
+                    <td>
+                        {% if room.status == 'Available' %}
+                        <span class="badge badge-success">Available</span>
+                        {% elif room.status == 'Full' %}
+                        <span class="badge badge-danger">Full</span>
+                        {% else %}
+                        <span class="badge badge-warning">Maintenance</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'edit_room' room.id %}" class="btn btn-outline"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Edit</a>
+                        <a href="{% url 'delete_room' room.id %}" class="btn btn-danger"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;"
+                            onclick="return confirm('Are you sure?');">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

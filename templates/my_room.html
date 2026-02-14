@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>My Allocated Room</h2>
+</div>
+
+{% if room %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header">
+        <h3 class="card-title">{{ room.block_name }} - {{ room.room_number }}</h3>
+    </div>
+    <div style="margin-bottom: 2rem;">
+        <div style="margin-bottom: 1rem;">
+            <strong class="text-light">Floor:</strong> {{ room.floor }}
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <strong class="text-light">Current Occupancy:</strong> {{ room.current_occupancy }} / {{ room.capacity }}
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <strong class="text-light">Type:</strong> {{ room.room_type }}
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <strong class="text-light">Status:</strong> <span class="badge badge-success">{{ room.status }}</span>
+        </div>
+    </div>
+
+    {% if roommates %}
+    <h3>Roommates</h3>
+    <ul style="list-style: none; padding: 0;">
+        {% for roommate in roommates %}
+        <li style="margin-bottom: 0.5rem; padding: 0.5rem; border-bottom: 1px solid #eee;">
+            {{ roommate.student.studentprofile.full_name }} ({{ roommate.student.username }})
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% else %}
+<div class="card" style="text-align: center;">
+    <h3>No room allocated yet.</h3>
+    <a href="{% url 'room_list' %}" class="btn btn-primary" style="margin-top: 1rem;">Browse Rooms</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header">
+        <h2 class="card-title">{% if title %}{{ title }}{% else %}Room Form{% endif %}</h2>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="grid">
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="text-danger">{{ field.errors.0 }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'manage_rooms' %}" class="btn btn-outline" style="margin-left: 1rem;">Back</a>
+    </form>
+</div>
+{% endblock %}

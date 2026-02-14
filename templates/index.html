@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">Welcome to PG Hostel Management</h1>
+    <p style="font-size: 1.25rem; color: var(--text-light); margin-bottom: 2rem;">Manage your accommodation,
+        applications, and complaints seamlessly.</p>
+
+    {% if not user.is_authenticated %}
+    <a href="{% url 'register' %}" class="btn btn-primary" style="font-size: 1.25rem;">Get Started</a>
+    <a href="{% url 'login' %}" class="btn btn-outline" style="font-size: 1.25rem; margin-left: 1rem;">Login</a>
+    {% else %}
+    {% if user.is_staff %}
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+    {% else %}
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

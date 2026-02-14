@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>Manage Complaints</h2>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for complaint in complaints %}
+                <tr>
+                    <td>{{ complaint.student.username }}</td>
+                    <td>{{ complaint.subject }}</td>
+                    <td>{{ complaint.description|truncatewords:20 }}</td>
+                    <td>{{ complaint.created_at|date:"Y-m-d" }}</td>
+                    <td>{{ complaint.status }}</td>
+                    <td>
+                        {% if complaint.status != 'Resolved' %}
+                        <a href="{% url 'resolve_complaint' complaint.id %}" class="btn btn-primary"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Resolve</a>
+                        {% else %}
+                        <span class="badge badge-success">Resolved</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No complaints found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

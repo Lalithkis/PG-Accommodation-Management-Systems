@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>Manage Room Allocations</h2>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Room</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for allocation in allocations %}
+                <tr>
+                    <td>{{ allocation.student.username }}</td>
+                    <td>{{ allocation.room.block_name }} - {{ allocation.room.room_number }}</td>
+                    <td>{{ allocation.allocated_date|date:"Y-m-d" }}</td>
+                    <td>
+                        {% if allocation.status == 'Approved' %}
+                        <span class="badge badge-success">Approved</span>
+                        {% elif allocation.status == 'Rejected' %}
+                        <span class="badge badge-danger">Rejected</span>
+                        {% else %}
+                        <span class="badge badge-warning">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if allocation.status == 'Pending' %}
+                        <a href="{% url 'approve_reject_allocation' allocation.id 'approve' %}" class="btn btn-primary"
+                            onclick="return confirm('Approve this allocation?');">Approve</a>
+                        <a href="{% url 'approve_reject_allocation' allocation.id 'reject' %}" class="btn btn-danger"
+                            onclick="return confirm('Reject this allocation?');">Reject</a>
+                        {% else %}
+                        <span class="text-light">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No allocations found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

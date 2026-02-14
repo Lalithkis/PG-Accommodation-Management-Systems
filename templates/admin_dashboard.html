@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>Admin Dashboard</h2>
+</div>
+
+<div class="grid">
+    <div class="card stat-card">
+        <div class="stat-value">{{ total_tenants }}</div>
+        <div class="stat-label">Total Tenants</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ total_rooms }}</div>
+        <div class="stat-label">Total Rooms</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ available_rooms }}</div>
+        <div class="stat-label">Available Rooms</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value text-danger">{{ occupied_rooms }}</div>
+        <div class="stat-label">Occupied Rooms</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value text-warning">{{ pending_apps }}</div>
+        <div class="stat-label">Pending Applications</div>
+        <a href="{% url 'manage_allocations' %}" class="btn btn-outline" style="margin-top: 1rem;">Review</a>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value text-info">{{ pending_complaints }}</div>
+        <div class="stat-label">Pending Complaints</div>
+        <a href="{% url 'manage_complaints' %}" class="btn btn-outline" style="margin-top: 1rem;">View All</a>
+    </div>
+</div>
+{% endblock %}

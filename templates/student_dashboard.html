@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-header" style="margin-bottom: 2rem;">
+    <h2>Student Dashboard</h2>
+    <p class="text-light">Welcome back, {{ user.studentprofile.full_name }}!</p>
+</div>
+
+<div class="grid">
+    <!-- Allocation Status Card -->
+    <div class="card stat-card">
+        {% if room %}
+        <div class="card-title">My Room</div>
+        <div class="stat-value">{{ room.block_name }} - {{ room.room_number }}</div>
+        <div class="stat-label">Allocated</div>
+        <a href="{% url 'my_room' %}" class="btn btn-outline" style="margin-top: 1rem;">View Details</a>
+        {% else %}
+        <div class="card-title">Room Status</div>
+        {% if pending_applications > 0 %}
+        <div class="stat-value" style="color: var(--warning);">Pending</div>
+        <div class="stat-label">Application under review</div>
+        {% else %}
+        <div class="stat-value" style="color: var(--text-light);">None</div>
+        <div class="stat-label">No room allocated</div>
+        <a href="{% url 'room_list' %}" class="btn btn-primary" style="margin-top: 1rem;">Apply Now</a>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Available Rooms Card -->
+    <div class="card stat-card">
+        <div class="card-title">Available Rooms</div>
+        <div class="stat-value">{{ available_rooms_count }}</div>
+        <div class="stat-label">Rooms Open</div>
+        <a href="{% url 'room_list' %}" class="btn btn-outline" style="margin-top: 1rem;">View All</a>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+        <div class="card-title">Quick Actions</div>
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{% url 'submit_complaint' %}" class="btn btn-outline">Submit Complaint</a>
+            <a href="{% url 'complaints' %}" class="btn btn-outline">My Complaints</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
